@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Hands;
+using System.IO;
 using System;
 
 public class HandDataLogger : MonoBehaviour
@@ -13,7 +14,16 @@ public class HandDataLogger : MonoBehaviour
     public TextMesh xPos;
     public TextMesh yPos;
     public TextMesh zPos;
+    public TextMesh trackingStatus;
     Vector3 pos;
+    public bool isTracking = false;
+    public int curTrial;
+    private StreamWriter logWriter;
+    private DateTime logStartTime;
+    public bool frombelow = true;
+    public float yThresh;
+    public string[] attributes = {"x_pos", "y_pos", "z_pos"};
+
     void Start()
     {
         // activityText.text = "Hello World";
@@ -82,12 +92,91 @@ public class HandDataLogger : MonoBehaviour
             xPos.text = rHand.ToString();
             if (trackingData.TryGetPose(out Pose pose))
             {
-                xPos.text = "x" + pose.position.x.ToString();
-                yPos.text = "y" + pose.position.y.ToString();
-                zPos.text = "z" + pose.position.z.ToString();
-            }
+                xPos.text = "x: " + pose.position.x.ToString();
+                yPos.text = "y: " + pose.position.y.ToString();
+                zPos.text = "z: " + pose.position.z.ToString();
 
+                if (pose.position.z > 0.6 && !isTracking && frombelow)
+                {
+                    frombelow = false;
+                    yThresh = pose.position.y;
+                    isTracking = !isTracking;
+                    StartLogging();
+                    StartCoroutine(pause());
+                }
+                else if (pose.position.z > 0.6 && isTracking && frombelow)
+                {
+                    isTracking = !isTracking;
+                    frombelow = false;
+                    StopLogging();
+                }
+
+                if (pose.position.z < 0.6)
+                {
+                    frombelow = true;
+                }
+
+                if (isTracking)
+                {
+                    LogAttributes(pose.position);
+                }
+
+
+            }
         }
+    }
+
+    IEnumerator pause()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    void StartLogging()
+    {
+        curTrial += 1;
+
+        string filename = $"handTrail_{curTrial:D2}.csv";
+        string path = Path.Combine(Application.persistentDataPath, filename);
+
+        logWriter = new StreamWriter(path);
+        logWriter.WriteLine(GetLogHeader());
+
+        logStartTime = DateTime.UtcNow;
+        trackingStatus.text = "TRACKING";
+
+    }
+
+    string GetLogHeader()
+    {
+        string logHeader = "time,";
+
+        logHeader += String.Join(",", attributes);
+        
+        return logHeader;
+    }
+
+    void StopLogging()
+    {
+        logWriter.Close();
+        trackingStatus.text = "NOT TRACKING";
+    }
+
+
+    void LogAttributes(Vector3 posVector)
+    {
+
+        if (posVector.y > yThresh + 0.05f)
+        {
+            return;
+        }
+        TimeSpan timeDifference = DateTime.UtcNow - logStartTime;
+
+        string logValue = $"{timeDifference.TotalMilliseconds},";
+
+        logValue += $"{posVector.x},{posVector.y},{posVector.z}";
+
+        logWriter.WriteLine(logValue);
+
     }
 
     void Update()
