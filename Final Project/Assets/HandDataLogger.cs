@@ -22,6 +22,7 @@ public class HandDataLogger : MonoBehaviour
     private DateTime logStartTime;
     public bool frombelow = true;
     public float yThresh;
+    public GameObject cube;
     public string[] attributes = {"x_pos", "y_pos", "z_pos"};
 
     void Start()
@@ -100,6 +101,7 @@ public class HandDataLogger : MonoBehaviour
                 {
                     frombelow = false;
                     yThresh = pose.position.y;
+                    cube.transform.position = new Vector3(0.002350986f, yThresh - 0.5f, 0.25f);
                     isTracking = !isTracking;
                     StartLogging();
                     StartCoroutine(pause());
@@ -116,7 +118,7 @@ public class HandDataLogger : MonoBehaviour
                     frombelow = true;
                 }
 
-                if (isTracking)
+                if (isTracking && frombelow)
                 {
                     LogAttributes(pose.position);
                 }
