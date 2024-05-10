@@ -76,56 +76,46 @@ public class HandDataLogger : MonoBehaviour
         XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
         XRHandSubsystem.UpdateType updateType)
     {
-        if (updateType == XRHandSubsystem.UpdateType.Dynamic)
+        // if (updateType == XRHandSubsystem.UpdateType.Dynamic)
+        // {
+            // This gets the joint of the right hand
+        var trackingData = rHand.GetJoint(XRHandJointID.IndexTip);
+        xPos.text = rHand.ToString();
+        if (trackingData.TryGetPose(out Pose pose))
         {
-            // var indexTip = 11;
-            // IT IS THIS LINE RIGHT HERE OFFICER THIS ONE
-            // IS THE ONE THAT IS CAUSING THE CRASH ON STARTUP
-            // for (var i = XRHandJointID.BeginMarker.ToIndex();
-            //          i < XRHandJointID.EndMarker.ToIndex();
-            //          i++)
-            // {
+            xPos.text = "x: " + pose.position.x.ToString();
+            yPos.text = "y: " + pose.position.y.ToString();
+            zPos.text = "z: " + pose.position.z.ToString();
 
-            //     // activityText.text = XRHandJointID.IndexTip.ToIndex().ToString();
-
-            // }
-            var trackingData = rHand.GetJoint(XRHandJointID.IndexTip);
-            xPos.text = rHand.ToString();
-            if (trackingData.TryGetPose(out Pose pose))
+            if (pose.position.z > 0.6 && !isTracking && frombelow)
             {
-                xPos.text = "x: " + pose.position.x.ToString();
-                yPos.text = "y: " + pose.position.y.ToString();
-                zPos.text = "z: " + pose.position.z.ToString();
-
-                if (pose.position.z > 0.6 && !isTracking && frombelow)
-                {
-                    frombelow = false;
-                    yThresh = pose.position.y;
-                    cube.transform.position = new Vector3(0.002350986f, yThresh - 0.5f, 0.25f);
-                    isTracking = !isTracking;
-                    StartLogging();
-                    StartCoroutine(pause());
-                }
-                else if (pose.position.z > 0.6 && isTracking && frombelow)
-                {
-                    isTracking = !isTracking;
-                    frombelow = false;
-                    StopLogging();
-                }
-
-                if (pose.position.z < 0.6)
-                {
-                    frombelow = true;
-                }
-
-                if (isTracking && frombelow)
-                {
-                    LogAttributes(pose.position);
-                }
-
-
+                frombelow = false;
+                yThresh = pose.position.y;
+                cube.transform.position = new Vector3(0.002350986f, yThresh - 0.5f, 0.25f);
+                isTracking = !isTracking;
+                StartLogging();
+                StartCoroutine(pause());
             }
+            else if (pose.position.z > 0.6 && isTracking && frombelow)
+            {
+                isTracking = !isTracking;
+                frombelow = false;
+                StopLogging();
+            }
+
+            if (pose.position.z < 0.6)
+            {
+                frombelow = true;
+            }
+
+            if (isTracking && frombelow)
+            {
+                LogAttributes(pose.position);
+            }
+
+
         }
+        // }
     }
 
     IEnumerator pause()
