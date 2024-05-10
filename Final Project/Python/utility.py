@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import interpolate
+from PIL import Image
 
 def plot(csv_path: str) -> list[list[int]]: 
 
@@ -8,11 +10,11 @@ def plot(csv_path: str) -> list[list[int]]:
     df = pd.read_csv(csv_path)
 
     # Initialize a 28x28 grid
-    grid = np.zeros((28, 28))
+    grid = np.zeros((56, 56))
 
     # Normalize function to scale x and y values to 0-27
     def normalize(value, min_val, max_val):
-        return 27 * (value - min_val) / (max_val - min_val)
+        return 55 * (value - min_val) / (max_val - min_val)
 
     # Getting the min and max for normalization
     min_x = df['x_pos'].min()
@@ -42,4 +44,39 @@ def plot(csv_path: str) -> list[list[int]]:
     plt.ylabel('Normalized Z Position')
     plt.show()
 
-plot("../Data/A_01.csv")
+# plot("../Data/A_01.csv")
+
+
+def csv_to_image(csv_file, image_size=(28, 28)):
+  # Initialize empty image with maximum intensity (white)
+    image = Image.new("L", image_size, color=0)
+    df = pd.read_csv(csv_file, index_col=False)
+
+    #   xlerp = interpolate.interp1d([int(df['x_pos'].min()), int(df['x_pos'].max()) + 1], [0, 27])
+    #   zlerp = interpolate.interp1d([int(df['z_pos'].min()), int(df['z_pos'].max()) + 1], [0, 27])
+    xlerp = interpolate.interp1d([(df['x_pos'].min()), (df['x_pos'].max())], [2, 25])
+    zlerp = interpolate.interp1d([(df['z_pos'].min()), (df['z_pos'].max())], [25, 2])
+    
+    # Read CSV data with row indexing
+    # Skip header row if it exists
+    def app_func(x,z):
+        print(f"Putting pixel at ({x},{z})")
+        x = int(xlerp(x))
+        z = int(zlerp(z))
+
+        # print(f"Putting pixel at ({x},{z})")
+
+        
+        # Set pixel value (black for data points)
+        image.putpixel((x, z), 255)
+
+    df.apply(lambda x: app_func(x['x_pos'], x['z_pos']), axis=1)
+    
+    return image
+
+# Example usage
+csv_path = "../Data/J_01.csv"
+image = csv_to_image(csv_path)
+
+# Optionally, save the image
+image.save("test_image.png")
