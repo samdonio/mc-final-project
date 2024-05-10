@@ -51,11 +51,21 @@ def csv_to_image(csv_file, image_size=(28, 28)):
   # Initialize empty image with maximum intensity (white)
     image = Image.new("L", image_size, color=0)
     df = pd.read_csv(csv_file, index_col=False)
+    df = df[['x_pos', 'z_pos']]
+    upsampled = pd.DataFrame()
+
+    upsampled['x_pos'] = (df['x_pos'] + df['x_pos'].shift(1)).dropna() / 2
+    upsampled['z_pos'] = (df['z_pos'] + df['z_pos'].shift(1)).dropna() / 2
+    print(upsampled.tail(5))
+
+    df = pd.concat([df, upsampled], axis=0)
+
+    print(df.tail(5))
 
     #   xlerp = interpolate.interp1d([int(df['x_pos'].min()), int(df['x_pos'].max()) + 1], [0, 27])
     #   zlerp = interpolate.interp1d([int(df['z_pos'].min()), int(df['z_pos'].max()) + 1], [0, 27])
-    xlerp = interpolate.interp1d([(df['x_pos'].min()), (df['x_pos'].max())], [2, 25])
-    zlerp = interpolate.interp1d([(df['z_pos'].min()), (df['z_pos'].max())], [25, 2])
+    xlerp = interpolate.interp1d([(df['x_pos'].min()), (df['x_pos'].max())], [2, image_size[0] - 2])
+    zlerp = interpolate.interp1d([(df['z_pos'].min()), (df['z_pos'].max())], [image_size[0] - 2, 2])
     
     # Read CSV data with row indexing
     # Skip header row if it exists
@@ -75,8 +85,8 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     return image
 
 # Example usage
-csv_path = "../Data/J_01.csv"
-image = csv_to_image(csv_path)
+csv_path = "../Data/B_01.csv"
+image = csv_to_image(csv_path, (28, 28))
 
 # Optionally, save the image
 image.save("test_image.png")
