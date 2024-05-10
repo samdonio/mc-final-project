@@ -1,15 +1,14 @@
 
 # PYTESSERACT
 
-# from PIL import Image
+from PIL import Image
 
-# import pytesseract
+import pytesseract
 
-# # Simple image to string
-# pytesseract.image_to_string(Image.open('../Data/AImage.png'))
-# print(pytesseract.image_to_string(Image.open('../Data/AImage.png')))
-
-
+# Simple image to string
+name = "A_01"
+result = pytesseract.image_to_string(Image.open("../Data/Image_" + name + ".png"), config='--psm 10')
+print(result)
 
 # EASYOCR 
 
@@ -21,18 +20,19 @@
 
 
 
+# KERAS OCR 
 
-from PIL import Image 
-import matplotlib.pyplot as plt
+# from PIL import Image 
+# import matplotlib.pyplot as plt
 
-import keras_ocr
+# import keras_ocr
 
-# keras-ocr will automatically download pretrained
-# weights for the detector and recognizer.
-pipeline = keras_ocr.pipeline.Pipeline()
+# # keras-ocr will automatically download pretrained
+# # weights for the detector and recognizer.
+# pipeline = keras_ocr.pipeline.Pipeline()
 
-image = Image.open('../Data/AImage.png')
-print(image)
+# image = Image.open('../Data/AImage.png')
+# print(image)
 
 # # Each list of predictions in prediction_groups is a list of
 # # (word, box) tuples.

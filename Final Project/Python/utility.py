@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import interpolate
 from PIL import Image
 
+# Plotting function to visualize the raw position measurements from CSV 
 def plot(csv_path: str) -> list[list[int]]: 
 
     # Load the data from a CSV file
@@ -56,11 +57,11 @@ def csv_to_image(csv_file, image_size=(28, 28)):
 
     upsampled['x_pos'] = (df['x_pos'] + df['x_pos'].shift(1)).dropna() / 2
     upsampled['z_pos'] = (df['z_pos'] + df['z_pos'].shift(1)).dropna() / 2
-    print(upsampled.tail(5))
+    # print(upsampled.tail(5))
 
     df = pd.concat([df, upsampled], axis=0)
 
-    print(df.tail(5))
+    # print(df.tail(5))
 
     #   xlerp = interpolate.interp1d([int(df['x_pos'].min()), int(df['x_pos'].max()) + 1], [0, 27])
     #   zlerp = interpolate.interp1d([int(df['z_pos'].min()), int(df['z_pos'].max()) + 1], [0, 27])
@@ -70,7 +71,7 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     # Read CSV data with row indexing
     # Skip header row if it exists
     def app_func(x,z):
-        print(f"Putting pixel at ({x},{z})")
+        # print(f"Putting pixel at ({x},{z})")
         x = int(xlerp(x))
         z = int(zlerp(z))
 
@@ -85,8 +86,9 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     return image
 
 # Example usage
-csv_path = "../Data/B_01.csv"
-image = csv_to_image(csv_path, (28, 28))
+name = "A_01"
+csv_path = "../Data/" + name + ".csv"
+image = csv_to_image(csv_path, (128, 128))
 
 # Optionally, save the image
-image.save("test_image.png")
+image.save("../Data/Image_" + name + ".png")
