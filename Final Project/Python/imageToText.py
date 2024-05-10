@@ -6,9 +6,14 @@ from PIL import Image
 import pytesseract
 
 # Simple image to string
-name = "A_01"
-result = pytesseract.image_to_string(Image.open("../Data/Image_" + name + ".png"), config='--psm 10')
+# -psm 10 is single character
+# -oem 3 picks default model type
+# -c whitelist gives the characters is can choose
+name = "C_01"
+result = pytesseract.image_to_string(Image.open("../Data/Image_" + name + ".png"), 
+                                     config='--psm 10 --oem 3 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOP0123456789')
 print(result)
+
 
 # EASYOCR 
 
