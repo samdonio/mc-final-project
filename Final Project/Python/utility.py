@@ -62,11 +62,19 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     df = pd.concat([df, upsampled], axis=0)
 
     # print(df.tail(5))
+    xRange = df['x_pos'].max() - df['x_pos'].min()
+    zRange = df['z_pos'].max() - df['z_pos'].min()
+    xOffset = 0 
+    zOffset = 0 
+    if xRange > zRange:
+        zOffset = (xRange - zRange) / 2 
+    else:
+        xOffset = (zRange - xRange) / 2
 
     #   xlerp = interpolate.interp1d([int(df['x_pos'].min()), int(df['x_pos'].max()) + 1], [0, 27])
     #   zlerp = interpolate.interp1d([int(df['z_pos'].min()), int(df['z_pos'].max()) + 1], [0, 27])
-    xlerp = interpolate.interp1d([(df['x_pos'].min()), (df['x_pos'].max())], [2, image_size[0] - 2])
-    zlerp = interpolate.interp1d([(df['z_pos'].min()), (df['z_pos'].max())], [image_size[0] - 2, 2])
+    xlerp = interpolate.interp1d([(df['x_pos'].min()) - xOffset, (df['x_pos'].max()) + xOffset], [2, image_size[0] - 2])
+    zlerp = interpolate.interp1d([(df['z_pos'].min()) - zOffset, (df['z_pos'].max()) + zOffset], [image_size[0] - 2, 2])
     
     # Read CSV data with row indexing
     # Skip header row if it exists
@@ -78,7 +86,7 @@ def csv_to_image(csv_file, image_size=(28, 28)):
         # print(f"Putting pixel at ({x},{z})")
 
         
-        # Set pixel value (black for data points)
+        # Set pixel value (white for data points)
         image.putpixel((x, z), 255)
 
     df.apply(lambda x: app_func(x['x_pos'], x['z_pos']), axis=1)
@@ -86,9 +94,9 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     return image
 
 # Example usage
-name = "A_01"
+name = "B_01"
 csv_path = "../Data/" + name + ".csv"
-image = csv_to_image(csv_path, (128, 128))
+image = csv_to_image(csv_path, (28, 28))
 
 # Optionally, save the image
 image.save("../Data/Image_" + name + ".png")
