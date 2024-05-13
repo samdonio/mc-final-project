@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "mobile-computing-423003",
+  "private_key_id": "a238b69640f26c74ba8e38e175152ba5dfce9252",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQg2RYoG8wa+0o\nHyg1Gz/MmNKNao4yzCmB0jUYez1LWvqCuxLPX5n+tUW4/uIhsqCQBzLEo4MlRrKh\nCCfgdszY0IBJKxYNwAABoK5yCJIEHP01HEJKyb+YjXTsitvWvFyTlJPzeF/a5cju\nTUVXuTKmkbaSGXNGLH9B1avD6s6oS3MAUc43Ym0fJa9KWcsNrOjk7OD9rbmp5H2/\nDiRJGrqhbOPnC0rY96uumklhlGgQSMFpGqj7l0hOAZzpwcBROMuUU6pH2DSrNS1x\nufduYq27Wie5mIFmQMTmBntcO5cc5PeGwERYq/uC0I4QuLQ1/xFHzdsiqpbdOfKb\nSGCJ37ltAgMBAAECggEAMXosEnenSqchdDbIdKmNnv/YXmQdb+JQKxT1MmTz63Cg\nJus7EGgQA4eCDt60S+i1/tcmbdCa6vp2oo1r4PBvtTbsafBGYGbh2YEGQ9rSwxUZ\n5ENbW6G5y/os94APoEm78ez8mnZC0I9b+Wfuf11brni/CLXvS4R9geKwymFqPjaT\nLYlXqPi5jkey+P6oM5k2WXVLADEYAtkbOvRWUWueKJ1SBGzNq2Oq9uRKTbYkDS8l\nWIx3Oo2E1EEtAU1OxrPqAlKeYxBv70WSWMOYzUJc7sZW3SFCA/WjLaO47+RnLLMq\n9OVUCP1xG4UJGEaB7fbYlQZ8LYo0ENqa3nZ9su42ZQKBgQD1tr2JBi3Got3gFgH1\nTKWrdZm8s77PWL9zGlkO/SY1BgagxsHZkSXjgLsG1pcXGnmh0pp4l+lQDP5q6SpA\nLqdtLGnOfgsHjvQfaRw8N7Gc46kxfQsP5iWBNsEdxZ/uaTVTpDtm4neJgORGAOVE\nxaKFcU7f+EVigu234biggjBWDwKBgQDZPfs8k9KtL3b8N212d8x0haL5h3M3fdp7\n6ssFwrZ70yXzjZ0d+tZ3wNcf376usHOaRHlPw/x4dqU+HEaSfW0wq7GMBNIMiXRX\nEeKZTeqyKuKzDCs2YcXXS2XaHOplPTQl7u039uFTyLLmxDkAk4coQvZ5pHiR/Mhj\n3Lfl71sUwwKBgEFtjpytC4VoGuKvmYfjB/5XCz/nMPjvbdNNgcdu+zyFRUCMjFPN\nxaQFxEd23ralMxw3AzD3aoYJX7nCKqD6i1STzfzRLUiu9SxkBcO3JNFdAdGOtWJf\naz80AEpYNFT8qNmD0tl7lk8EBkTpuiMM6VDVMiaLapZnvLsJHOuInyxbAoGAC6lW\nGTReNMm9e2CGUbuwj/i0fOyWdL4ewlQiPdbr8M2u1doeOwPCC3+gjKd4FuyF6BwQ\n3wVIQjcsO59M8oQlHl25FCkWFXIzepENNumF1baToMTgdPTep+X2O7Udp/2XFQo0\nVbK8+cBmShjybmN8995QWMtJZZzKLQImJQOqQf0CgYANzfRNSvsBdEuxvQm1+8eh\n6zhR8rQI3FO9ikD2N8crmxNym5zc8pDcgn73JCWeVp1Ghv5n3IXsJHJTOqSjZx3c\nagKmcXyNLp20o/dPoT2Oy4OtLU0SnjiQMue5ZaZ6W1DYb7NELLhIbvWWfYRq/gbv\nX8USxnFCOdD5cZ/Tw2a3dg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloud-vision@mobile-computing-423003.iam.gserviceaccount.com",
+  "client_id": "112575261847420132313",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloud-vision%40mobile-computing-423003.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
