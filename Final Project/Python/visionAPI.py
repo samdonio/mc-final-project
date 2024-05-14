@@ -1,13 +1,30 @@
+import os
 from google.cloud import vision
-# from google.oauth2 import service_account
 
-file = '../Python/mobile-computing-423003-a238b69640f2.json'
-client = vision.Client.from_service_account_json(file)
+def classify_image(image_path):
 
-png = '../Data/AImage.png'
+    # Set the environment variable for authentication
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../api-keys/mobile-computing-423003-db46a0535e44.json'
 
-with open(png, 'rb') as f:
-    content = f.read()
+    # Initialize the Google Vision API
+    client = vision.ImageAnnotatorClient()
 
-image = vision.Image(content=content)
-response = client.document_text_detection(image=image)
+    # An image is read
+    with open(image_path, 'rb') as image_file:
+        content = image_file.read()
+
+    # OCR
+    image = vision.Image(content=content)
+    response = client.document_text_detection(image=image)
+
+    texts = response.text_annotations
+
+    if response.error.message:
+        raise Exception(f'{response.error.message}')
+
+    print(texts)
+
+    detected_text = texts[0].description if texts else ''
+    detected_text = detected_text.strip()
+
+    return detected_text
