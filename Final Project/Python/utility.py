@@ -71,25 +71,51 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     else:
         xOffset = (zRange - xRange) / 2
 
+    buffer = image_size[0] // 5 
+
     #   xlerp = interpolate.interp1d([int(df['x_pos'].min()), int(df['x_pos'].max()) + 1], [0, 27])
     #   zlerp = interpolate.interp1d([int(df['z_pos'].min()), int(df['z_pos'].max()) + 1], [0, 27])
-    xlerp = interpolate.interp1d([(df['x_pos'].min()) - xOffset, (df['x_pos'].max()) + xOffset], [2, image_size[0] - 2])
-    zlerp = interpolate.interp1d([(df['z_pos'].min()) - zOffset, (df['z_pos'].max()) + zOffset], [image_size[0] - 2, 2])
+    xlerp = interpolate.interp1d([(df['x_pos'].min()) - xOffset, (df['x_pos'].max()) + xOffset], [buffer, image_size[0] - buffer])
+    zlerp = interpolate.interp1d([(df['z_pos'].min()) - zOffset, (df['z_pos'].max()) + zOffset], [image_size[0] - buffer, buffer])
     
-    # Read CSV data with row indexing
-    # Skip header row if it exists
-    def app_func(x,z):
-        # print(f"Putting pixel at ({x},{z})")
-        x = int(xlerp(x))
-        z = int(zlerp(z))
-
-        # print(f"Putting pixel at ({x},{z})")
-
+    # Function to draw a line between two points
+    def draw_line(x0, y0, x1, y1, size):
+        if (x0 - x1) ** 2 + (y0 - y1) ** 2 > size // 5:
+            return 
         
-        # Set pixel value (white for data points)
-        image.putpixel((x, z), 255)
+        points = []
+        x0, y0, x1, y1 = int(x0), int(y0), int(x1), int(y1)
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+        sx = 1 if x0 < x1 else -1
+        sy = 1 if y0 < y1 else -1
+        err = dx - dy
 
-    df.apply(lambda x: app_func(x['x_pos'], x['z_pos']), axis=1)
+        while True:
+            points.append((x0, y0))
+            if x0 == x1 and y0 == y1:
+                break
+            e2 = err * 2
+            if e2 > -dy:
+                err -= dy
+                x0 += sx
+            if e2 < dx:
+                err += dx
+                y0 += sy
+
+        for x, y in points:
+            if 0 <= x < image_size[0] and 0 <= y < image_size[1]:
+                image.putpixel((x, y), 255)
+
+    # Iterate over pairs of points and draw lines between them
+    for i in range(len(df) - 1):
+        x0, y0 = df.iloc[i]
+        x1, y1 = df.iloc[i + 1]
+        x0 = xlerp(x0)
+        y0 = zlerp(y0)
+        x1 = xlerp(x1)
+        y1 = zlerp(y1)
+        draw_line(x0, y0, x1, y1, image_size[0])
     
     return image
 

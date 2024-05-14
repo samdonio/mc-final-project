@@ -6,7 +6,7 @@ count = 0
 for i in range(26):
     currChr = chr(ord('A') + i)
     name = chr(ord('A') + i) + "_01"
-    size = (28, 28)
+    size = (64, 64)
 
     csv_path = "../Data/Upsampled/" + name + ".csv"
     image = csv_to_image(csv_path, size)
