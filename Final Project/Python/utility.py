@@ -94,9 +94,9 @@ def csv_to_image(csv_file, image_size=(28, 28)):
     return image
 
 # Example usage
-name = "B_01"
-csv_path = "../Data/" + name + ".csv"
-image = csv_to_image(csv_path, (28, 28))
+# name = "B_01"
+# csv_path = "../Data/" + name + ".csv"
+# image = csv_to_image(csv_path, (28, 28))
 
-# Optionally, save the image
-image.save("../Data/Image_" + name + ".png")
+# # Optionally, save the image
+# image.save("../Data/Image_" + name + ".png")
