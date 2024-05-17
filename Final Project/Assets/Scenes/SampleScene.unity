@@ -335,8 +335,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
-<<<<<<< HEAD
-=======
 --- !u!1 &749792295
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,7 +746,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 966bf3c9767784cbdb760682874f3eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
->>>>>>> fb204e7a8fec62526f4fc7bd8d32e76c946ed977
 --- !u!1001 &1050350676
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -824,12 +821,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1050350677}
   m_Enabled: 1
   m_EditorHideFlags: 0
-<<<<<<< HEAD
   m_Script: {fileID: 11500000, guid: ad434ed9d0132431d86135a00e0bb22d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-=======
-  m_Script: {fileID: 11500000, guid: 7172c1f6e097344a09c67a5b64c2a3e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   xPos: {fileID: 749792296}
@@ -840,7 +832,7 @@ MonoBehaviour:
   curTrial: 0
   frombelow: 1
   yThresh: 0
-  cube: {fileID: 1963719368}
+  cube: {fileID: 0}
   attributes:
   - x_pos
   - y_pos
@@ -1279,7 +1271,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
->>>>>>> fb204e7a8fec62526f4fc7bd8d32e76c946ed977
 --- !u!1 &1963719368
 GameObject:
   m_ObjectHideFlags: 0
