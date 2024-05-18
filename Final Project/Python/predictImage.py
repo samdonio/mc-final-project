@@ -7,7 +7,7 @@ from charclf.models import VGGNet, AlexNet, SpinalNet, ResNet
 from charclf.tools.eval import multi_evaluate, evaluate, confusion_matrix_viz
 from charclf.tools.viz import predict
 from charclf.tools.train import train_
-import cv2
+# import cv2
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
