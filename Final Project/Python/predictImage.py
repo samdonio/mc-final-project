@@ -1,20 +1,11 @@
-import time
-from PIL import Image
-import torch
-from torch.utils.data import DataLoader
-from charclf.dataset import load_dataset
-from charclf.models import VGGNet, AlexNet, SpinalNet, ResNet
-from charclf.tools.eval import multi_evaluate, evaluate, confusion_matrix_viz
-from charclf.tools.viz import predict
-from charclf.tools.train import train_
-# import cv2
+
+from charclf.models import VGGNet
 import numpy as np
-import torch
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
-import torchvision.transforms as transforms
-import torchvision.transforms.functional as F
 from PIL import Image
+import time
+import torch
+from torchvision import transforms
+import torchvision.transforms.functional as F
 
 class AlwaysMirrorAndRotate(object):
     def __call__(self, img):

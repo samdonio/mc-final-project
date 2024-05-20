@@ -6,15 +6,25 @@ import json
 def send_csv_as_json(csv_file_path, url):
     # Load CSV file into a pandas DataFrame
     df = pd.read_csv(csv_file_path)
-    
+
+    # Rename columns
+    df = df.rename(columns={"x_pos": "x", "y_pos": "y", "z_pos": "z"})
+
     # Convert DataFrame to JSON
     json_data = df.to_json(orient='records')
     
-    # Parse JSON string to a Python list of dictionaries
-    json_data = json.loads(json_data)
-    
+    # Wrap with "data" key
+    wrapped_data = {
+        "data": json.loads(json_data)
+    }
+
+    # Convert back to JSON string if needed
+    wrapped_data = {
+        "data": json.loads(json_data)
+    }
+
     # Send POST request with JSON data
-    response = requests.post(url, json=json_data)
+    response = requests.post(url, json=wrapped_data)
     
     # Print response status and text
     print(f"Status Code: {response.status_code}")

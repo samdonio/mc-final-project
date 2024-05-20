@@ -1,9 +1,10 @@
+
+from charclf.models import VGGNet
+from dataToPredict import csv_to_image
 from flask import Flask, request
 import pandas as pd
-import torch
-from dataToPredict import csv_to_image
-from charclf.models import VGGNet, AlexNet, SpinalNet, ResNet
 import time
+import torch
 
 app = Flask(__name__)
 
@@ -28,6 +29,7 @@ def character_classifier():
 
     # Access JSON data (application/json)
     json_data = map(rename_keys, (request.json)['data'])
+    # json_data = request.json
     if not json_data:
         return "No Data in Request", 400
 
@@ -37,8 +39,8 @@ def character_classifier():
     # print(json_data)
 
     
-    df = pd.DataFrame(json_data)
-    result = df[['x_pos', 'z_pos']]
+    positions = pd.DataFrame(json_data)
+    result = positions[['x_pos', 'z_pos']]
     end_time = time.time()
     result = csv_to_image(result, model)
     end2_time = time.time()
