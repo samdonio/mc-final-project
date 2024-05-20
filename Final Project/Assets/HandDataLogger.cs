@@ -27,6 +27,10 @@ public class HandDataLogger : MonoBehaviour
     public GameObject cube;
     public string[] attributes = {"x_pos", "y_pos", "z_pos"};
 
+    // New
+    public LineRenderer lineRender;
+    List<Vector3> lineList = new List<Vector3>();
+
     public List<Vector3> PosList = new List<Vector3>();
 
     [System.Serializable]
@@ -41,6 +45,7 @@ public class HandDataLogger : MonoBehaviour
         // activityText = GetComponent<TextMesh>();
         xPos.text = "Oh my god please work";
         pos = new Vector3(0, 0, 0);
+        lineRender.positionCount = 0;
 
         // Set up the hand subsystem
         var handSubsystems = new List<XRHandSubsystem>();
@@ -127,6 +132,8 @@ public class HandDataLogger : MonoBehaviour
             {
                 // LogAttributes(pose.position);
                 LogVector(pose.position);
+                lineRender.positionCount = lineList.Count;
+                lineRender.SetPositions(lineList.ToArray());
             }
 
 
@@ -141,6 +148,7 @@ public class HandDataLogger : MonoBehaviour
             return;
         }
         PosList.Add(pos);
+        lineList.Add(new Vector3(pos.x, yThresh + 0.01f, pos.z));
     }
 
     IEnumerator VecStop()
@@ -149,7 +157,9 @@ public class HandDataLogger : MonoBehaviour
         response.text = "Made it inside VecStop";
         // string jsdata = JsonUtility.ToJson(PosList);
         string jsdata = JsonUtility.ToJson(wrapper);
-        string url = "http://10.150.128.112:5000/character";
+        // string url = "http://10.150.128.112:5000/character";
+        // string url = "http://10.0.0.211:5000/character";
+        string url = "http://18.224.119.14:5000/character";
 
         // New
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsdata);
@@ -167,7 +177,8 @@ public class HandDataLogger : MonoBehaviour
 
         yield return www.SendWebRequest();
 
-        response.text = www.responseCode.ToString();
+        // response.text = www.responseCode.ToString();
+        response.text = www.downloadHandler.text;
 
 
         if (www.result != UnityWebRequest.Result.Success)
@@ -180,6 +191,8 @@ public class HandDataLogger : MonoBehaviour
         }
 
         PosList.Clear();
+        lineList.Clear();
+        lineRender.positionCount = 0;
     }
 
     IEnumerator pause()
