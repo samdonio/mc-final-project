@@ -5,6 +5,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.Hands;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
 public class HandDataLogger : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class HandDataLogger : MonoBehaviour
     public TextMesh xPos;
     public TextMesh yPos;
     public TextMesh zPos;
+    public TextMesh response;
     public TextMesh trackingStatus;
     Vector3 pos;
     public bool isTracking = false;
@@ -25,12 +27,25 @@ public class HandDataLogger : MonoBehaviour
     public GameObject cube;
     public string[] attributes = {"x_pos", "y_pos", "z_pos"};
 
+    // New
+    public LineRenderer lineRender;
+    List<Vector3> lineList = new List<Vector3>();
+
+    public List<Vector3> PosList = new List<Vector3>();
+
+    [System.Serializable]
+    public class PosListWrapper
+    {
+        public List<Vector3> data;
+    }
+
     void Start()
     {
         // activityText.text = "Hello World";
         // activityText = GetComponent<TextMesh>();
         xPos.text = "Oh my god please work";
         pos = new Vector3(0, 0, 0);
+        lineRender.positionCount = 0;
 
         // Set up the hand subsystem
         var handSubsystems = new List<XRHandSubsystem>();
@@ -87,20 +102,25 @@ public class HandDataLogger : MonoBehaviour
             yPos.text = "y: " + pose.position.y.ToString();
             zPos.text = "z: " + pose.position.z.ToString();
 
+            yPos.text = isTracking.ToString() + " " + frombelow.ToString() + " " + (pose.position.z > 0.6).ToString();
+            zPos.text = (pose.position.z > 0.6 && !isTracking && frombelow).ToString();
+
             if (pose.position.z > 0.6 && !isTracking && frombelow)
             {
+                xPos.text = "tx: " + pose.position.x.ToString();
                 frombelow = false;
                 yThresh = pose.position.y;
                 cube.transform.position = new Vector3(0.002350986f, yThresh - 0.5f, 0.25f);
                 isTracking = !isTracking;
-                StartLogging();
+                // StartLogging();
                 StartCoroutine(pause());
             }
             else if (pose.position.z > 0.6 && isTracking && frombelow)
             {
                 isTracking = !isTracking;
                 frombelow = false;
-                StopLogging();
+                // StopLogging();
+                StartCoroutine(VecStop());
             }
 
             if (pose.position.z < 0.6)
@@ -110,12 +130,69 @@ public class HandDataLogger : MonoBehaviour
 
             if (isTracking && frombelow)
             {
-                LogAttributes(pose.position);
+                // LogAttributes(pose.position);
+                LogVector(pose.position);
+                lineRender.positionCount = lineList.Count;
+                lineRender.SetPositions(lineList.ToArray());
             }
 
 
         }
         // }
+    }
+
+    void LogVector(Vector3 pos)
+    {
+        if (pos.y > yThresh + 0.05f)
+        {
+            return;
+        }
+        PosList.Add(pos);
+        lineList.Add(new Vector3(pos.x, yThresh + 0.01f, pos.z));
+    }
+
+    IEnumerator VecStop()
+    {
+        PosListWrapper wrapper = new PosListWrapper { data = PosList};
+        response.text = "Made it inside VecStop";
+        // string jsdata = JsonUtility.ToJson(PosList);
+        string jsdata = JsonUtility.ToJson(wrapper);
+        // string url = "http://10.150.128.112:5000/character";
+        // string url = "http://10.0.0.211:5000/character";
+        string url = "http://18.224.119.14:5000/character";
+
+        // New
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsdata);
+
+        // UnityWebRequest www = UnityWebRequest.Post(url, jsdata);
+        UnityWebRequest www = new UnityWebRequest(url, "POST");
+
+        // New
+        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        www.SetRequestHeader("Content-Type", "application/json");
+
+        // New
+        www.downloadHandler = new DownloadHandlerBuffer();
+
+
+        yield return www.SendWebRequest();
+
+        // response.text = www.responseCode.ToString();
+        response.text = www.downloadHandler.text;
+
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            trackingStatus.text = "FALIED THE POST";
+        }
+        else
+        {
+            trackingStatus.text = "LFG POST WAS MADE";
+        }
+
+        PosList.Clear();
+        lineList.Clear();
+        lineRender.positionCount = 0;
     }
 
     IEnumerator pause()
